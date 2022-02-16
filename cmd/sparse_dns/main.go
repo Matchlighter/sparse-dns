@@ -132,16 +132,15 @@ func syncResolve(req *dns.Msg) (*dns.Msg, time.Duration, error) {
 		if err != nil || (resolved != nil && resolved.Truncated) {
 			resolved, rtt, err = tcpClient.Exchange(req, addr)
 		}
-		if (dns.RcodeToString[resolved.Rcode] != "NOERROR") {
-			continue
+		if (err != nil) {
+			return nil, 0, err
 		}
-		if err == nil {
+		if (dns.RcodeToString[resolved.Rcode] == "SERVFAIL") {
 			break
 		}
-	}
-
-	if err != nil {
-		return nil, 0, err
+		if (dns.RcodeToString[resolved.Rcode] == "NOERROR") {
+			break
+		}
 	}
 
 	return resolved, rtt, nil
