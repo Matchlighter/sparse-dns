@@ -183,22 +183,6 @@ func resolveViaResolverThreads(req *dns.Msg) (*dns.Msg, time.Duration, error) {
 }
 
 func resolve(req *dns.Msg) (*dns.Msg, error) {
-	extra2 := []dns.RR{}
-	for _, extra := range req.Extra {
-		if extra.Header().Rrtype != dns.TypeOPT {
-			extra2 = append(extra2, extra)
-		}
-	}
-
-	dnssec := false
-	for _, extra := range req.Extra {
-		if extra.Header().Rrtype == dns.TypeOPT {
-			dnssec = extra.(*dns.OPT).Do()
-		}
-	}
-
-	req.Extra = extra2
-	req.SetEdns0(dns.DefaultMsgSize, dnssec)
 	resolved, _, err := resolveViaResolverThreads(req)
 	if err != nil {
 		return nil, err
