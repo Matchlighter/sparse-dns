@@ -49,8 +49,8 @@ func main() {
 
 	upstreamServers = strings.Split(*upstreamServersStr, ",") // parseUpstreamServers(*upstreamServersStr)
 	resolverRing = make(chan QueuedRequest, *maxClients)
-	udpClient = dns.Client{Net: "udp", DialTimeout: globalTimeout, ReadTimeout: globalTimeout, WriteTimeout: globalTimeout, SingleInflight: true}
-	tcpClient = dns.Client{Net: "tcp", DialTimeout: globalTimeout, ReadTimeout: globalTimeout, WriteTimeout: globalTimeout, SingleInflight: true}
+	udpClient = dns.Client{Net: "udp", DialTimeout: globalTimeout, ReadTimeout: globalTimeout, WriteTimeout: globalTimeout, SingleInflight: false}
+	tcpClient = dns.Client{Net: "tcp", DialTimeout: globalTimeout, ReadTimeout: globalTimeout, WriteTimeout: globalTimeout, SingleInflight: false}
 
 	for i := uint(0); i < *maxClients; i++ {
 		go func() {
